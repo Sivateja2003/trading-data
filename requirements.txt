@@ -1,6 +1,6 @@
 kiteconnect
 pandas
-psycopg2-binary
+mysql-connector-python
 python-dotenv
 sqlalchemy
 schedule

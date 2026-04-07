@@ -10,7 +10,7 @@ from logger import logger
 # Configuration
 STOCKS = ["RELIANCE", "TCS", "INFY", "HDFCBANK"]
 BUFFER_SIZE = 50  # Flush after 50 ticks
-FLUSH_INTERVAL = 1  # Or every 2 seconds
+FLUSH_INTERVAL =   # Or every 2 seconds
 
 class TickerPipeline:
     def __init__(self):
