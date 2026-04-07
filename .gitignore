@@ -1,0 +1,28 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Tokens and cached data
+.token.json
+.instruments.json
+instruments.csv
+
+# Logs
+pipeline.log
+*.log
+
+# Databases
+pgdata/
+
+# Python caching
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS files
+.DS_Store
+Thumbs.db
