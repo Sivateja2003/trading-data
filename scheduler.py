@@ -14,7 +14,7 @@ def run_job():
     except Exception as e:
         logger.error(f"Error running scheduled job: {e}")
 
-# Schedule for 6:00 PM (after market close)
+# Schedule for 8:30 PM (after market close)
 schedule.every().day.at("20:30").do(run_job)
 
 logger.info("Scheduler started. Waiting for 20:30 local time...")
