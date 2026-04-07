@@ -1,16 +1,14 @@
--- Initial schema for stock data storage
+-- Initial schema for stock data storage (MySQL Compatible)
 
 CREATE TABLE IF NOT EXISTS stock_data (
     instrument_token BIGINT,
-    symbol TEXT,
-    timestamp TIMESTAMP,
+    symbol VARCHAR(255),
+    timestamp DATETIME(6),
     open FLOAT,
     high FLOAT,
     low FLOAT,
     close FLOAT,
     volume BIGINT,
-    PRIMARY KEY (instrument_token, timestamp)
+    PRIMARY KEY (instrument_token, timestamp),
+    INDEX idx_stock_data_symbol_timestamp (symbol, timestamp)
 );
-
--- Index for faster lookups by symbol and timestamp
-CREATE INDEX IF NOT EXISTS idx_stock_data_symbol_timestamp ON stock_data (symbol, timestamp);

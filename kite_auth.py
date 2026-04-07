@@ -52,6 +52,7 @@ class KiteAuthenticator:
         if access_token:
             try:
                 self.kite.set_access_token(access_token)
+                self.access_token = access_token
                 # Verify token by fetching profile
                 self.kite.profile()
                 logger.info("Successfully authenticated using stored token.")
@@ -67,6 +68,7 @@ class KiteAuthenticator:
             data = self.kite.generate_session(request_token, api_secret=self.api_secret)
             access_token = data["access_token"]
             self.kite.set_access_token(access_token)
+            self.access_token = access_token
             self._save_token(access_token)
             logger.info("Successfully authenticated manually.")
             return self.kite

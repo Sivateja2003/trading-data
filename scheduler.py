@@ -15,9 +15,9 @@ def run_job():
         logger.error(f"Error running scheduled job: {e}")
 
 # Schedule for 6:00 PM (after market close)
-schedule.every().day.at("18:00").do(run_job)
+schedule.every().day.at("20:30").do(run_job)
 
-logger.info("Scheduler started. Waiting for 18:00 local time...")
+logger.info("Scheduler started. Waiting for 20:30 local time...")
 
 while True:
     schedule.run_pending()
