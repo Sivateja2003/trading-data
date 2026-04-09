@@ -152,7 +152,7 @@ def fetch_historical_data(
 
     if not records:
         print("No data returned for the given parameters.")
-        return pd.DataFrame()
+        return pd.DataFrame(), instrument_token
 
     df = pd.DataFrame(records)
     df["date"] = pd.to_datetime(df["date"])
@@ -160,7 +160,7 @@ def fetch_historical_data(
     df.sort_index(inplace=True)
 
     print(f"Retrieved {len(df)} candles.")
-    return df
+    return df, instrument_token
 
 
 # ---------------------------------------------------------------------------

@@ -22,7 +22,8 @@ import sys
 import pandas as pd
 
 from auth import get_authenticated_kite
-from fetcher import fetch_historical_data, VALID_INTERVALS
+from fetcher import fetch_historical_data, VALID_INTERVALS, _to_datetime
+from database import ensure_table, data_exists, save_to_db
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -82,19 +83,41 @@ def build_parser() -> argparse.ArgumentParser:
 def main():
     parser = build_parser()
     args = parser.parse_args()
+    print("[DEBUG] Arguments parsed successfully")
 
-    kite = get_authenticated_kite()
+    symbol   = args.symbol
+    exchange = args.exchange.upper()
+    interval = args.interval
 
-    df = fetch_historical_data(
-        kite=kite,
-        symbol=args.symbol,
-        from_date=args.from_date,
-        to_date=args.to_date,
-        interval=args.interval,
-        exchange=args.exchange.upper(),
-        continuous=args.continuous,
-        oi=args.oi,
-    )
+    # Parse dates once so we can reuse them for both DB checks and the API call
+    from_dt = _to_datetime(args.from_date, is_start=True)
+    to_dt   = _to_datetime(args.to_date,   is_start=False)
+    print(f"[DEBUG] Date range: {from_dt} to {to_dt}")
+
+    # Ensure the MySQL table exists
+    print("[DEBUG] Initializing database...")
+    ensure_table()
+    print("[DEBUG] Database table ready")
+
+    if data_exists(symbol, exchange, interval, from_dt, to_dt):
+        print("Data is already present in the database.")
+        sys.exit(0)
+    else:
+        print("[DEBUG] Data not found in DB, fetching from Kite API...")
+        kite = get_authenticated_kite()
+        df, instrument_token = fetch_historical_data(
+            kite=kite,
+            symbol=symbol,
+            from_date=from_dt,
+            to_date=to_dt,
+            interval=interval,
+            exchange=exchange,
+            continuous=args.continuous,
+            oi=args.oi,
+        )
+        if not df.empty:
+            rows_saved = save_to_db(df, symbol, instrument_token, exchange, interval, from_dt, to_dt)
+            print(f"Saved {rows_saved} candle(s) to the stock_data table.")
 
     if df.empty:
         print("No data to display.")
